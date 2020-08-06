@@ -8,7 +8,7 @@ const fs = require("fs");
 // Sets up the Express App
 // =============================================================
 var app = express();
-var PORT = 3000;
+var PORT = process.env.PORT || 3001;
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -27,6 +27,10 @@ app.get("/notes", function(req, res) {
 //Sends user to the initial index.html page
 app.get("*", function(req, res) {
     res.sendFile(path.join(__dirname, "index.html"));
+});
+
+app.get("/", function(req, res) {
+  res.json(path.join(__dirname, "index.html"));
 });
 
  //Displays all notes
