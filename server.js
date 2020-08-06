@@ -1,8 +1,9 @@
 
 // Dependencies
 // =============================================================
-var express = require("express");
-var path = require("path");
+const express = require("express");
+const path = require("path");
+
 
 // Sets up the Express App
 // =============================================================
@@ -12,6 +13,7 @@ var PORT = 3000;
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use("/public",express.static("public"));
 
 
 // Routes
@@ -19,12 +21,17 @@ app.use(express.json());
 
 // Basic route that sends the user first to the notes Page
 app.get("/notes", function(req, res) {
-    res.sendFile(path.join(__dirname, "../../notes.html"));
+    res.sendFile(path.join(__dirname, "notes.html"));
   });
 
 //Sends user to the initial index.html page
 app.get("*", function(req, res) {
-    res.sendFile(path.join(__dirname, "../../index.html"));
+    res.sendFile(path.join(__dirname, "index.html"));
+});
+
+ //Displays all notes
+app.get("/api/notes", function(req, res) {
+  console.log(json.title);
 });
 
 //starts the server to begin listening
