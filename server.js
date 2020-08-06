@@ -3,7 +3,7 @@
 // =============================================================
 const express = require("express");
 const path = require("path");
-
+const fs = require("fs");
 
 // Sets up the Express App
 // =============================================================
@@ -30,9 +30,26 @@ app.get("*", function(req, res) {
 });
 
  //Displays all notes
-app.get("/api/notes", function(req, res) {
-  console.log(json.title);
-});
+//app.get("/api/notes", function(req, res) {
+  //let rawNotes = fs.readFileSync("db/db.json");
+  //let finalNotes = JSON.parse(rawNotes);
+  //return res.json(finalNotes);
+//});
+
+//app.post("/api/notes", function(req, res) {
+  //let rawNotes = fs.readFileSync("db/db.json");
+  //let newNote = req.body;
+
+  // Using a RegEx Pattern to remove spaces from newNote
+  // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
+  //newNote.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
+
+  //console.log(newNote);
+
+  //rawnotes.push(newNote);
+
+  //res.json(newNote);
+//});
 
 //starts the server to begin listening
 app.listen(PORT, function() {
