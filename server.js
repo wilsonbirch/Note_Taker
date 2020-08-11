@@ -4,6 +4,7 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const generateUniqueId = require('generate-unique-id');
 
 // Sets up the Express App
 // =============================================================
@@ -15,6 +16,75 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/public",express.static("public"));
 
+
+//Displays all notes
+app.get("/api/notes", function(req, res) {
+  fs.readFile('db/db.json', 'utf8', function(err, d) {
+    let savedNotes = JSON.parse(d);
+    res.send(savedNotes);
+  });
+});
+
+//Posts typed Note w text and generates a unique ID
+app.post("/api/notes", function(req, res) {
+  fs.readFile("db/db.json", function(err,data) {
+    
+    //check for error
+    if (err) throw err;
+
+    //generate ID
+    let idValue = generateUniqueId({
+      length: 3,
+      useLetters: false
+    });
+
+    //set data as a variable (json) and new note data
+    let json = JSON.parse(data);
+    let note = {
+      title: req.body.title,
+      text: req.body.text,
+      id: idValue
+    }
+
+    //push new note to json
+    json.push(note);
+
+    //rewrite updated json file to array
+    fs.writeFile('db/db.json', JSON.stringify(json, null, 2), function (err)  {
+      if (err) throw err;
+      res.send('200');
+    });
+  });
+});
+
+//delete notes
+app.delete("/api/notes/:id", function (req, res) {
+
+  fs.readFile("db/db.json", function (err, data) {
+
+    // check for error
+    if (err) throw err;
+      let deleteId = req.params.id;
+
+      let json = JSON.parse(data);
+
+      json.forEach((item, j) =>{
+        if (item.id.includes(deleteId)){ 
+          json.splice(j, 1);       
+        }
+      });
+    
+      // Write updated json to array 
+      fs.writeFile('db/db.json', JSON.stringify(json, null, 2), (err) => {
+        // Check for error
+        if (err) throw err;
+        res.send('200');
+      });
+    });
+    
+});
+  
+  
 
 // Routes
 // =============================================================
@@ -29,30 +99,12 @@ app.get("*", function(req, res) {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
+//need route for heroku app
 app.get("/", function(req, res) {
   res.json(path.join(__dirname, "index.html"));
 });
 
-//Displays all notes
-app.get("/api/notes", function(req, res) {
-  let rawNotes = fs.readFileSync("db/db.json");
-  let finalNotes = JSON.parse(rawNotes);
-  return res.json(finalNotes);
-});
-
-app.post("/api/notes", function(req, res) {
-  let rawNotes = fs.readFileSync("db/db.json");
-  let newNote = req.body;
-
-   //Using a RegEx Pattern to remove spaces from newNote
-  newNote.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
-
-  console.log(newNote);
-
-  rawnotes.push(newNote);
-
-  res.json(newNote);
-});
+app.use(express.static(path.join(__dirname, 'public')));
 
 //starts the server to begin listening
 app.listen(PORT, function() {

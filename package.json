@@ -7,9 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "author": "",
+  "author": "Wilson Birch",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4"
+    "body-parser": "^1.19.0",
+    "express": "^4.16.4",
+    "generate-unique-id": "^2.0.0",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.4",
+    "save": "^2.4.0"
   }
 }
